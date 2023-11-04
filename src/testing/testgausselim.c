@@ -4,6 +4,7 @@
 
 #include "backsub.c"
 #include "gausselim.c"
+#include "matvec.c"
 
 /*
 	Tests the routines required for solving a system of equations via Gaussian elimination
@@ -13,8 +14,8 @@ int main()
 	// Generate strictly diagonal dominant matrix a
 	// System of equations: ay = b
 	const int n = 10;
-	double y[n] // All 1s
-	double a[n][n]
+	double y[n]; // All 1s
+	double a[n][n];
 	for (int i = 0; i < n; i++)
 	{
 		y[i] = 1.0;
