@@ -36,7 +36,7 @@ int main()
 		
 		// Gaussian elimination
 		double a_gauss[n][n]; // Make copies of a and b to preserve them for the lu method
-		double b_gauss[n][n];
+		double b_gauss[n];
 		for (int i = 0; i < n; i++)
 		{
 			for (int j = 0; j < n; j++)
