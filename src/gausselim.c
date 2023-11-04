@@ -10,7 +10,7 @@
 		a: reduced to upper-triangular matrix
 		b: changed to maintain ax = b
 */
-void gaussjordan(int n, double a[][n], double b[])
+void gausselim(int n, double a[][n], double b[])
 {
     // Make a upper triangular (modifying b accordingly)
     for (int k = 0; k < n - 1; k++)
