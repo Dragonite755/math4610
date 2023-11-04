@@ -16,11 +16,11 @@ int main()
 {
 	// Increment the value of n to find the breaking-even point
 	srand(time(NULL));
-	printf("Counting number of operations to solve n x n system of equations:\n");
-	printf(" n | Gauss |    LU\n------------------\n");
+	printf("Counting number of operations to solve n x n system of equations:\n\n");
+	printf(" n || elim  | back  | Gauss || fact  | forw  | back  |    LU\n------------------------------------------------------------\n");
 	for (int n = 2; n <= 50; n++)
 	{
-		printf("%2d | ", n);
+		printf("%2d || ", n);
 		double a[n][n]; // Create separate matrices and vectors for each strategy
 		double z[n]; // Name z to reserve x and y for LU factorization
 		
@@ -51,19 +51,39 @@ int main()
 		}
 		
 		double x_gauss[n];
-		int op_count = 0;
+		int op_count = 0; // Count for a single routine in the method
+		int op_total = 0; // Total operations for current method
+		
 		gausselimcount(n, a_gauss, b_gauss, &op_count);
-		backsubcount(n, a_gauss, b_gauss, x_gauss, &op_count);
 		printf("%5d | ", op_count);
+		op_total += op_count;
+		op_count = 0;
+		
+		backsubcount(n, a_gauss, b_gauss, x_gauss, &op_count);
+		op_total += op_count;
+		printf("%5d | ", op_count);
+		printf("%5d || ", op_total);
 		
 		// LU factorization
 		op_count = 0;
+		op_total = 0;
+		
 		lufactorcount(n, a, &op_count);
-		double x_lu[n];
+		printf("%5d | ", op_count);
+		op_total += op_count;
+		op_count = 0;
+		
 		double y[n];
 		forwardsubcount(n, a, b, y, &op_count);
+		printf("%5d | ", op_count);
+		op_total += op_count;
+		op_count = 0;
+		
+		double x_lu[n];
 		backsubcount(n, a, y, x_lu, &op_count);
-		printf("%5d\n", op_count);
+		printf("%5d | ", op_count);
+		op_total += op_count;
+		printf("%5d\n", op_total);
 	}
 	
 	return 0;
