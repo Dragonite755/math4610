@@ -15,10 +15,12 @@
 int main()
 {
 	// Increment the value of n to find the breaking-even point
-	printf("n      Gauss      LU");
-	for (int n = 2; n < 15; n++)
+	srand(time(NULL));
+	printf("Counting number of operations to solve n x n system of equations:\n");
+	printf(" n | Gauss |    LU\n------------------\n");
+	for (int n = 2; n <= 50; n++)
 	{
-		printf("")
+		printf("%2d | ", n);
 		double a[n][n]; // Create separate matrices and vectors for each strategy
 		double z[n]; // Name z to reserve x and y for LU factorization
 		
@@ -48,14 +50,20 @@ int main()
 			b_gauss[i] = b[i];
 		}
 		
-		double x[n];
+		double x_gauss[n];
 		int op_count = 0;
 		gausselimcount(n, a_gauss, b_gauss, &op_count);
-		backsubcount(n, a_gauss, b_gauss, x, &op_count);
-		printf("%d ", op_count);
+		backsubcount(n, a_gauss, b_gauss, x_gauss, &op_count);
+		printf("%5d | ", op_count);
 		
 		// LU factorization
-		
+		op_count = 0;
+		lufactorcount(n, a, &op_count);
+		double x_lu[n];
+		double y[n];
+		forwardsubcount(n, a, b, y, &op_count);
+		backsubcount(n, a, y, x_lu, &op_count);
+		printf("%5d\n", op_count);
 	}
 	
 	return 0;
