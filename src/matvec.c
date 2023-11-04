@@ -16,7 +16,7 @@ void matvec(int n, double m[][n], double v[], double p[])
 		double sum = 0.0;
 		for (int j = 0; j < n; j++)
 		{
-			sum += m[i][j] * v[j]
+			sum += m[i][j] * v[j];
 		}
 		p[i] = sum;
 	}
