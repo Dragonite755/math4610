@@ -26,9 +26,9 @@ void main() {
 	// Solve ax = b
 	printf("Solution should be all 1s:\n[ ");
 	backsub(n, a, b, x); // Re-use x vector, which will be filled with new values
-	for (i = 0; i < n - 1; i++)
+	for (int i = 0; i < n - 1; i++)
 	{
-		printf("%.2f ");
+		printf("%.2f ", x[i]);
 	}
 	printf("]");
 }
