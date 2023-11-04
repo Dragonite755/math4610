@@ -10,7 +10,7 @@
 #include "linfdist.c"
 
 /*
-	Tests all norm and distance routines
+	Tests all norm length and distance routines
 */
 int main() 
 {
@@ -25,25 +25,41 @@ int main()
 	
 	double v1[n]; // test vector
 	double v2[n]; // test vector
-	
-	
 	for (int i = 0; i < n; i++)
 	{
 		v1[i] = vmin + (double) rand() / RAND_MAX * (vmax - vmin);
 		v2[i] = vmin + (double) rand() / RAND_MAX * (vmax - vmin);
 	}
 	
-	printf("Test vectors:\n");
-	printf("1: \n");
+	// Display test vectors
+	printf("Randomly-Generated Test Vectors:\n-----\nv1:\n");
 	for (int i = 0; i < n; i++)
 	{
-		printf("\t%f", v1[i]);
+		printf("\t%f\n", v1[i]);
 	}
-	printf("\n2: \n");
+	printf("\nv2:\n");
 	for (int i = 0; i < n; i++)
 	{
-		printf("\t%f", v2[i]);
+		printf("\t%f\n", v2[i]);
 	}
+	
+	// Test norms and distances
+	printf("\nTesting norms and distances:\n-----\n");
+	
+	printf("L1\n");
+	printf("\tNorm v1         : %f\n", l1norm(n, v1));
+	printf("\tNorm v2         : %f\n", l1norm(n, v2));
+	printf("\tDistance v1, v2 : %f\n", l1dist(n, v1, v2));
+	
+	printf("L2\n");
+	printf("\tNorm v1         : %f\n", l2norm(n, v1));
+	printf("\tNorm v2         : %f\n", l2norm(n, v2));
+	printf("\tDistance v1, v2 : %f\n", l2dist(n, v1, v2));
+	
+	printf("L-Infinity\n");
+	printf("\tNorm v1         : %f\n", linfnorm(n, v1));
+	printf("\tNorm v2         : %f\n", linfnorm(n, v2));
+	printf("\tDistance v1, v2 : %f\n", linfdist(n, v1, v2));
 	
 	return 0;
 }
