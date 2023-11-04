@@ -11,7 +11,7 @@
 		x: vector solution to ax = b
 		op_count: incremented by the number of mathematical operations perfomed
 */
-void backsub(int n, double u[][n], double b[], double x[], int* op_count)
+void backsubcount(int n, double u[][n], double b[], double x[], int* op_count)
 {
     x[n - 1] = b[n - 1] / u[n - 1][n - 1];
     for (int i = n - 2; i >= 0; i--)

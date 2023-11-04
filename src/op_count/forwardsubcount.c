@@ -8,7 +8,7 @@
 		y: vector of size n
 		op_count: will be incremented by the number of mathematical operations taken
 */
-void forwardsub(int n, double l[][n], double b[], double y[], int* op_count)
+void forwardsubcount(int n, double l[][n], double b[], double y[], int* op_count)
 {
     y[0] = b[0];
     for (int i = 0; i < n; i++)

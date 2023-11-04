@@ -9,7 +9,7 @@
 	Output:
 		op_count: incrememented by the number of mathematical operations performed
 */
-void lufactor(int n, double a[][n], int* op_count)
+void lufactorcount(int n, double a[][n], int* op_count)
 {
     for (int k = 0; k < n - 1; k++)
     {

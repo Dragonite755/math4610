@@ -11,7 +11,7 @@
 		b: changed to maintain ax = b
 		op_count: incrememented by the number of mathematical operations taken
 */
-void gausselim(int n, double a[][n], double b[], int* op_count)
+void gausselimcount(int n, double a[][n], double b[], int* op_count)
 {
     // Make a upper triangular (modifying b accordingly)
     for (int k = 0; k < n - 1; k++)
