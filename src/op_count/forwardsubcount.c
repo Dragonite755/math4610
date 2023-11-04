@@ -17,7 +17,7 @@ void forwardsubcount(int n, double l[][n], double b[], double y[], int* op_count
         for (int j = 0; j < i; j++)
         {
             sum += l[i][j] * y[j];
-			*op_count += 1;
+			*op_count += 2;
         }
         y[i] = b[i] - sum;
 		*op_count += 1;

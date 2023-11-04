@@ -20,7 +20,7 @@ void backsubcount(int n, double u[][n], double b[], double x[], int* op_count)
         for (int j = i + 1; j < n; j++)
         {
             sum += u[i][j] * x[j];
-			*op_count += 1;
+			*op_count += 2;
         }
         x[i] = (b[i] - sum) / u[i][i];
 		*op_count += 2;

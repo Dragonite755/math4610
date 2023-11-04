@@ -13,6 +13,7 @@ int main()
 {
 	// Generate strictly diagonal dominant matrix a
 	// System of equations: ay = b
+	srand(time(NULL));
 	const int n = 10;
 	double y[n]; // All 1s
 	double a[n][n];

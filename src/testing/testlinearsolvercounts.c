@@ -15,8 +15,10 @@
 int main()
 {
 	// Increment the value of n to find the breaking-even point
+	printf("n      Gauss      LU");
 	for (int n = 2; n < 15; n++)
 	{
+		printf("")
 		double a[n][n]; // Create separate matrices and vectors for each strategy
 		double z[n]; // Name z to reserve x and y for LU factorization
 		
@@ -51,6 +53,9 @@ int main()
 		gausselimcount(n, a_gauss, b_gauss, &op_count);
 		backsubcount(n, a_gauss, b_gauss, x, &op_count);
 		printf("%d ", op_count);
+		
+		// LU factorization
+		
 	}
 	
 	return 0;
