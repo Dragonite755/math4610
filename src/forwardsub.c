@@ -6,6 +6,9 @@
 		l: lower triangular matrix of size n x n
 		b: vector of size n
 		y: vector of size n
+		
+	Output:
+		y: solution
 */
 void forwardsub(int n, double l[][n], double b[], double y[])
 {
