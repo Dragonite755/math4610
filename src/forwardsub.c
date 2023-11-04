@@ -1,10 +1,11 @@
 /*
-Solve ly = b for y, where l is a lower triangular matrix
+	Solve ly = b for y, where l is a lower triangular matrix with diagonal values 1
 
-n: size
-l: lower triangular matrix
-b: vector
-y: vector
+	Input:
+		n: size
+		l: lower triangular matrix of size n x n
+		b: vector of size n
+		y: vector of size n
 */
 void forwardsub(int n, double l[][n], double b[], double y[])
 {
