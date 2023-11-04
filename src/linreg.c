@@ -1,4 +1,16 @@
-void linreg(double x[], double y[], int n, double A[]) {
+/*
+	Computes the coefficients for a linear regression of values y on x (y = ax + b)
+	
+	Input:
+		int n: length of input vectors x and y
+		x: vector of values
+		c: two-valued empty vector to store coefficients of regression
+	
+	Output:
+		c: Stores the values of the coefficients of the regression [a, b]
+*/
+void linreg(int n, double x[], double y[], double c[]) {
+	// Calculate sums first
 	double s1 = 0;   // sum x_i
 	double s2 = 0;   // sum x_i^2
 	
@@ -8,17 +20,17 @@ void linreg(double x[], double y[], int n, double A[]) {
 		s2 += x[i] * x[i];
 	}
 	
-	// y = mx + b
-	A[0] = 0;   // m
-	A[1] = 1;   // b
+	// Set values of coefficients vector to 0
+	c[0] = 0;   // a
+	c[1] = 0;   // b
 	
-	// (X^T X)^-1 X^T Y
-	double det = n * s2 - s1 * s1;
+	// Compute (X^T X)^-1 X^T y
+	double det = n * s2 - s1 * s1;   // Divide by this last
 	for (int i = 0; i < n; i++)
 	{
-		A[0] += y[i] * (n * x[i] - s1);
-		A[1] += y[i] * (s2 - s1 * x[i]);
+		c[0] += y[i] * (n * x[i] - s1);
+		c[1] += y[i] * (s2 - s1 * x[i]);
 	}
-	A[0] /= det;
-	A[1] /= det;
+	c[0] /= det;
+	c[1] /= det;
 }

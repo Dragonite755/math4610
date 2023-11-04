@@ -6,7 +6,7 @@ l: lower triangular matrix
 b: vector
 y: vector
 */
-void forwardsubstitution(int n, double l[][n], double b[], double y[])
+void forwardsub(int n, double l[][n], double b[], double y[])
 {
     y[0] = b[0];
     for (int i = 0; i < n; i++)

@@ -1,5 +1,5 @@
 /*
-	Computes the forward difference quotient to approximate a derivative
+	Computes the central difference quotient to approximate a derivative
 	
 	Input:
 		f: function to approximate the derivative of
@@ -9,7 +9,7 @@
 	Output:
 		return: approximation of f'(x)
 */
-double forwarddf(double (*f)(double), double x, double h)
+double centdf(double (*f)(double), double(x), double h)
 {
-	return (f(x + h) - f(x)) / h;
+	return ((f(x + h) - f(x - h)) / (2 * h));
 }

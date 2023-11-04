@@ -1,15 +1,25 @@
 #include <math.h>
 
-double linfnorm(double v[], int n)
+/*
+	Computes the L-infinity norm of a vector
+	
+	Input:
+		n: length of v
+		v: vector to calculate norm of
+		
+	Output:
+		return: norm of v
+*/
+double linfnorm(int n, double v[])
 {
-	double maxAbs = 0.0;
+	double max = 0.0;
 	for (int i = 0; i < n; i++)
 	{
 		double abs = fabs(v[i]);
-		if (x > norm)
+		if (abs > max)
 		{
-			maxAbs = abs;
+			max = abs;
 		}
 	}
-	return norm;
+	return max;
 }

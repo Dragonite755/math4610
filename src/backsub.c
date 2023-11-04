@@ -1,12 +1,16 @@
 /*
-Solve ax = b for x, where a is upper triangular
+	Solve ax = b for x, where a is upper triangular
 
-n: size
-a: upper triangular matrix
-b: vector
-x: vector
+	Input:
+		n: size of matrix and vectors
+		a: upper triangular matrix
+		b: vector
+		x: vector (empty)
+	
+	Output:
+		x: vector solution to ax = b
 */
-void backsubstitution(int n, double a[][n], double b[], double x[])
+void backsub(int n, double a[][n], double b[], double x[])
 {
     x[n - 1] = b[n - 1] / a[n - 1][n - 1];
     for (int i = n - 2; i >= 0; i--)

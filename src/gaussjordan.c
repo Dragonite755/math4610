@@ -1,9 +1,14 @@
 /*
-Utilizes Gauss-Jordan elimination on ax = b to put a into upper triangular form, modifying b accordingly
+	Utilizes Gauss-Jordan elimination to reduce ax = b into upper triangular form (modifying both a and b)
 
-n: size
-a: matrix
-b: vector
+	Input:
+		n: size of a and b
+		a: square matrix in ax = b
+		b: vector in ax = b
+		
+	Output:
+		a: reduced to upper-triangular matrix
+		b: changed to maintain ax = b
 */
 void gaussjordan(int n, double a[][n], double b[])
 {
