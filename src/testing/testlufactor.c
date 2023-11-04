@@ -40,7 +40,7 @@ int main()
 	forwardsub(n, a, b, y);
 	
 	// Solve ux = y
-	double x[n]
+	double x[n];
 	backsub(n, a, y, x);
 	
 	// Solution should be x = z
