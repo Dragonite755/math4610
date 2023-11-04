@@ -50,7 +50,7 @@ int main()
 		int op_count = 0;
 		gausselimcount(n, a_gauss, b_gauss, &op_count);
 		backsubcount(n, a_gauss, b_gauss, x, &op_count);
-		printf("%d", op_count);
+		printf("%d ", op_count);
 	}
 	
 	return 0;
