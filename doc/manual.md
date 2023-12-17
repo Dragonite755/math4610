@@ -22,17 +22,17 @@
 - [Gauss-Seidel Method (gaussseidel)](#Gauss-Seidel-Method)
 5. [Statistics](#Statistics) 
 - [Linear Regression (linreg)](#Linear-Regression)
-6. [Root Finding]
+6. [Root Finding](#Root-Finding)
 - [Fixed Point Iteration (fixedpntiter)](#Fixed-Point-Iteration)
 - [Bisection Method (bisectroot)](#Bisection-Method)
 - [Newton Method (newtonroot)](#Newton-Method)
 - [Secant Method (secantroot)](#Secant-Method)
 - [Hybrid Bisection Secant Method (bisectsecantroot)](#Hybrid-Bisection-Secant-Method)
-7. [Eigenvalues]
+7. [Eigenvalues](#Eigenvalues)
 - [Power Method (powermethod)](#Power-Method)
 - [Inverse Power Method (inversepowermethod)](#Inverse-Power-Method)
 - [Shifted Inverse Power Method (shiftedinvpowermethod)](#Shifted-Inverse-Power-Method)
-8. [Miscellaneous]
+8. [Miscellaneous](#Miscellaneous)
 - [Matrix-Vector multiplication (matvec)](#Matrix-Vector-Multiplication)
 - [Dot Product (dotproduct)](#Dot-Product)
 
@@ -570,46 +570,320 @@ void forwardsub(int n, double l[][n], double b[], double y[])
 
 ## Jacobi Iteration
 
-**Routine Name:** 
+**Routine Name:** jacobi
 
 **Author:** Bryan Armenta
 
 **Language:** C. The code can be compiled using the GNU C compiler (GCC). 
 
-**Description/Purpose:** 
+**Description/Purpose:** Utilizes Jacobi iteration to solve for the solution x to a system of equations Ax = b. Convergence is guaranteed for diagonally dominant A.
 
-**Input:** 
+**Input:** The matrix A and vector b of size n in Ax = b, the initial guess x0 for the solution, the size of n of the matrix and vectors, and the maximum iterations and tolerance for which to approximate the solution.
 
-**Output:** 
+**Output:** The vector x stores the solution (if it is found). Otherwise, an error message is printed to the console.
 
-**Usage/Example:**
+**Usage/Example:** Test by randomly generating a matrix A, modifying it to be diagonally dominant, then create a system $Ax=b$ where the solution $x$ is a vector full of 1s. Then, utilize Jacobi iteration to approximate x.
 
-**Implementation/Code:** The following is the code for forwardsub():
+```
+#include "jacobi.c"
+
+#include <stdlib.h>
+#include <time.h>
+
+/*
+    Prints vector to console
+*/
+void printVector(int n, double v[])
+{
+    printf("[ ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%f ", v[i]);
+    }
+    printf("]");
+}
+
+int main()
+{
+    // Generate diagonally dominant matrix
+    srand((unsigned int)(time(NULL)));
+    int n = 5;
+    double A[n][n];
+    for (int i = 0; i < n; i++)
+    {
+        double sum = fabs(A[i][i]) + 1.0;
+        for (int j = 0; j < n; j++)
+        {
+            sum += fabs(A[i][j]);
+        }
+        A[i][i] = sum;
+    }
+    
+    // Create system Ax = b
+    double xTrue[n];
+    for (int i = 0; i < n; i++)
+    {
+        xTrue[i] = 1.0;
+    }
+    double b[n];
+    matvec(n, A, xTrue, b);
+    
+    // Solve with Jacobi method
+    double MIN_VALUE = -100.0;
+    double RANGE = 200.0;
+    double x0[n]; // Initial guess
+    for (int i = 0; i < n; i++)
+    {
+        x0[i] = (float)rand() * RANGE / RAND_MAX + MIN_VALUE;
+    }
+    
+    double maxiter = 1e6;
+    double tol = 1e-3;
+    double x[n]; // Estimated solution
+    jacobi(n, A, b, x0, x, maxiter, tol);
+    printVector(n, x);
+    
+    return 0;
+}
 ```
 
+Output:
+```
+[ 1.000000 1.000000 1.000000 1.000000 1.000000 ]
+```
+
+**Implementation/Code:** The following is the code for jacobi():
+```
+#include "matvec.c"
+#include "l2norm.c"
+
+#include <stdio.h>
+
+/*
+    Copies elements from vector o into vector c
+*/
+double copyVector(int n, double o[n], double c[n])
+{
+    for (int i = 0; i < n; i++)
+    {
+        c[i] = o[i];
+    }
+}
+
+/*
+    Normalizes vector
+*/
+void normalize(int n, double v[n])
+{
+    double magnitude = l2norm(n, v);
+    for (int i = 0; i < n; i++)
+    {
+        v[i] /= magnitude;
+    }
+}
+
+/*
+    Subtracts two vectors r = x - y
+*/
+void subtractVector(int n, double x[n], double y[n], double r[n])
+{
+    for (int i = 0; i < n; i++)
+    {
+        r[i] = x[i] - y[i];
+    }
+}
+
+/*
+    Utilizes the Jacobi method to calculate the solution x to the system Ax = b
+    
+    Input:
+        n: size of matrix and vectors
+        A: square matrix in Ax = b
+        b: vector in Ax = b
+        x0: initial guess for solution x
+        maxiter: maximum number of iterations to attempt
+        tol: tolerance
+        
+    Output:
+        x: estimated solution
+*/
+void jacobi(int n, double A[n][n], double b[n], double x0[n], double x[], int maxiter, double tol)
+{
+    copyVector(n, x, x0); // x: x_k; preserve original guess x0
+    double x1[n]; // x_(k+1)
+    
+    double res[n]; // residual
+    matvec(n, A, x, x1); // Use x2 as temporary storage since we don't need it yet
+    subtractVector(n, b, x1, res); // res = b - Ax
+    double error = l2norm(n, res); // error = || res ||
+    
+    int iter = 0;
+    while (error > tol && iter < maxiter)
+    {
+        // Compute x_(k+1), using the residual to save operations
+        // x_(k+1) = D^-1 (b - (L + U) x_k)
+        // Since r = b - Ax_k = b - (D + L + U) x_k = b - (L + U) x_k - Dx_k,
+        // => x_(k+1) = D^-1 (Dx_k + r) = x_k + D^-1 r
+        for (int i = 0; i < n; i++)
+        {
+            x1[i] = x[i] + res[i] / A[i][i];
+        }
+        
+        // Compute new residual and error
+        matvec(n, A, x1, x); // Use x1 as temporary storage, since it is no longer needed in the current iteration
+        subtractVector(n, b, x, res); // res = b - Ax
+        error = l2norm(n, res); // error = || res ||
+
+        copyVector(n, x1, x); // Reset for next iteration
+        
+        iter++;
+    }
+    if (error > tol)
+    {
+        printf("Solution not found for given iteration count and tolerance"); // If solution was not found
+    }
+}
 ```
 
 **Last Modified:** December/2023
 
 ## Gauss-Seidel Method
 
-**Routine Name:** 
+**Routine Name:** gaussseidel
 
 **Author:** Bryan Armenta
 
 **Language:** C. The code can be compiled using the GNU C compiler (GCC). 
 
-**Description/Purpose:** 
+**Description/Purpose:** Utilizes the Gauss-Seidel method to calculate the solution to a system $Ax = b$.
 
-**Input:** 
+**Input:** The matrix A and vector b of size n in Ax = b, the initial guess x0 for the solution, the size of n of the matrix and vectors, and the maximum iterations and tolerance for which to approximate the solution.
 
-**Output:** 
+**Output:** The vector x stores the solution (if it is found). Otherwise, an error message is printed to the console.
 
-**Usage/Example:**
+**Usage/Example:** Test by randomly generating a matrix A, modifying it to be diagonally dominant, then create a system $Ax=b$ where the solution $x$ is a vector full of 1s. Then, utilize the Gauss-Seidel method to approximate x.
 
-**Implementation/Code:** The following is the code for forwardsub():
+```
+#include "gaussseidel.c"
+
+#include <stdlib.h>
+#include <time.h>
+
+/*
+    Prints vector to console
+*/
+void printVector(int n, double v[])
+{
+    printf("[ ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%f ", v[i]);
+    }
+    printf("]");
+}
+
+int main()
+{
+    // Generate diagonally dominant matrix
+    srand((unsigned int)(time(NULL)));
+    int n = 5;
+    double A[n][n];
+    for (int i = 0; i < n; i++)
+    {
+        double sum = fabs(A[i][i]) + 1.0;
+        for (int j = 0; j < n; j++)
+        {
+            sum += fabs(A[i][j]);
+        }
+        A[i][i] = sum;
+    }
+    
+    // Create system Ax = b
+    double xTrue[n];
+    for (int i = 0; i < n; i++)
+    {
+        xTrue[i] = 1.0;
+    }
+    double b[n];
+    matvec(n, A, xTrue, b);
+    
+    // Solve with Jacobi method
+    double MIN_VALUE = -100.0;
+    double RANGE = 200.0;
+    double x0[n]; // Initial guess
+    for (int i = 0; i < n; i++)
+    {
+        x0[i] = (float)rand() * RANGE / RAND_MAX + MIN_VALUE;
+    }
+    
+    double maxiter = 1e6;
+    double tol = 1e-3;
+    double x[n]; // Estimated solution
+    gaussseidel(n, A, b, x0, x, maxiter, tol);
+    printVector(n, x);
+    
+    return 0;
+}
 ```
 
+Output:
+```
+[ 1.000000 1.000000 1.000000 1.000000 1.000000 ]
+```
+
+**Implementation/Code:** The following is the code for gaussseidel():
+```
+/*
+    Utilizes the Gauss-Seidel method to calculate the solution x to the system Ax = b
+    
+    Input:
+        n: size of matrix and vectors
+        A: diagonally dominant square matrix in Ax = b
+        b: vector in Ax = b
+        x0: initial guess for solution x
+        maxiter: maximum number of iterations to attempt
+        tol: tolerance
+        
+    Output:
+        x: estimated solution
+*/
+void gaussseidel(int n, double A[n][n], double b[n], double x0[n], double x[], int maxiter, double tol)
+{
+    copyVector(n, x0, x); // x_k; copy to preserve original guess x0
+    double res[n]; // residual
+    matvec(n, A, x, res); // Use residual as temporary storage for Ax
+    subtractVector(n, b, res, res); // res = b - Ax
+    double error = l2norm(n, res);
+    
+    int iter = 0;
+    while (error > tol && iter < maxiter)
+    {
+        // Calculate every term of x_(k+1)
+        for (int i = 0; i < n; i++)
+        {
+            double sum = 0.0;
+            for (int j = 0; j < n; j++)
+            {
+                if (i != j)
+                {
+                    sum += A[i][j] * x[j];
+                }
+            }
+            x[i] = (b[i] - sum) / A[i][i];
+        }
+        
+        // Compute error
+        matvec(n, A, x, res); // Use residual as temporary storage for Ax
+        subtractVector(n, b, res, res); // res = b - Ax
+        error = l2norm(n, res);
+        
+        iter++;
+    }
+    if (error > tol)
+    {
+        printf("Solution not found for given iteration count and tolerance"); // If solution was not found
+    }
+}
 ```
 
 **Last Modified:** December/2023
